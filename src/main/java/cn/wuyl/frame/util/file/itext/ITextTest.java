@@ -1,8 +1,11 @@
 package cn.wuyl.frame.util.file.itext;
 
 import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
@@ -11,8 +14,8 @@ public class ITextTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String[] files = { "e:\\1.pdf", "e:\\2.pdf", "e:\\3.pdf" };  
-        String savepath = "e:\\temp.pdf";  
+		String[] files = { "e:\\4.pdf", "e:\\5.pdf", "e:\\6.pdf" };  
+        String savepath = "e:\\temp.zip";  
         mergePdfFiles(files, savepath);
 	}
 	
@@ -21,10 +24,16 @@ public class ITextTest {
         Document document = null;  
         PdfReader reader = null;  
         try {  
-            reader = new PdfReader(files[0]);  
-  
-            document = new Document(reader.getPageSize(1));  
-            PdfCopy copy = new PdfCopy(document, new FileOutputStream(newfile));  
+//            reader = new PdfReader(files[0]);  
+//            document = new Document(reader.getPageSize(1));  
+            document = new Document(PageSize.LEGAL);  
+            
+            FileOutputStream fo = new FileOutputStream(newfile);
+            ZipOutputStream zos = new ZipOutputStream(fo);
+            zos.setLevel(java.util.zip.Deflater.BEST_COMPRESSION);
+			zos.putNextEntry(new ZipEntry("merge.pdf"));
+			
+            PdfCopy copy = new PdfCopy(document, zos);  
             document.open();  
             for (int i = 0; i < files.length; i++) {  
                 reader = new PdfReader(files[i]);  
